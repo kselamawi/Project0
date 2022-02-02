@@ -21,13 +21,12 @@ public CustomerService customerService;
             System.out.println("+------------------------------------------------------+");
             System.out.println("pLease select an option below");
             System.out.println("1.) Create an account");
-            System.out.println("2.) getCustomerByUsername");
-            System.out.println("3.) Deposit to an account ");
-            System.out.println("4.) Withdraw from an account");
-            System.out.println("5.) getBalance");
-            System.out.println("6.) Transfer");
-            System.out.println("7.) LoginAccount");
-            System.out.println("8.) Back");
+            System.out.println("2.) Deposit to an account ");
+            System.out.println("3.) Withdraw from an account");
+            System.out.println("4.) getBalance");
+            System.out.println("5.) Transfer");
+            System.out.println("6.) LoginAccount");
+            System.out.println("7.) Back");
             try {
                 choice = Integer.parseInt(Menu.sc.nextLine());
             } catch (NumberFormatException e) {
@@ -36,20 +35,21 @@ public CustomerService customerService;
             switch (choice) {
                 case 1:
                     // create an account
-                    String firstname = getFirstnameInput();
-                    String lastname = getLastnameInput();
-                    String UserName = getUsernameInput();
-                    String password = getPasswordInput();
-                    int account_num = getAccountNumInput();
-                    double balance = getBalanceInput();
+                  int custmId =getCustomerIdInputToCreate();
+                  String firstname =getFirstnameInputToCreateAccount();
+                  String lastname =getLastnameInputToCreate();
+                  String username =getUserNameInputToCreate();
+                  String password =getPasswordInputToCreate();
+                  int account_num =getAccountNumToCreate();
+                  double balance =getInitailBalanceToCreate();
                     try {
-                        customerService.createAccount(firstname, lastname, UserName, password,account_num ,balance);
+                        customerService.createAccount(custmId,firstname, lastname, username, password,account_num ,balance);
                         System.out.println();
                     } catch (Exception e) {
                         e.fillInStackTrace();
                     }
                     break;
-                case 2:
+                /*case 2:
                     String username = gettingUsernameInput();
                     try {
                         Customer customer = customerService.getCustomerByUsername(username);
@@ -57,8 +57,8 @@ public CustomerService customerService;
                     } catch (Exception e) {
                         System.out.println(e.getClass().getClass() + " " + e.getMessage());
                     }
-                    break;
-                case 3:
+                    break;*/
+                case 2:
                     //deposit
                     int accNum = gettingAccountToDeposit();
                     double Amount = gettingAmountInput();
@@ -70,7 +70,7 @@ public CustomerService customerService;
                         System.out.println(e.getClass() + " " + e.getMessage());
                     }
                     break;
-                case 4:
+                case 3:
                     //withdraw
                     int acc_num = gettingAccNumWithdrawFrom();
                     double amount = getAmountInput();
@@ -80,7 +80,7 @@ public CustomerService customerService;
                         System.out.println("the account number you entered is not found");
                     }
                     break;
-                case 5:
+                case 4:
                     // Get Balance
                     int accountNum = gettingBalanceInput();
                     try {
@@ -90,7 +90,7 @@ public CustomerService customerService;
                         System.out.println("the account number you entered is not found");
                     }
 
-                case 6:
+                case 5:
                     //Transfer
                     int from = getSourceAccountNum();
                     int to = getDestinationAccountNum();
@@ -104,7 +104,7 @@ public CustomerService customerService;
                         System.out.println("the account numbers are not found");
                     }
                     break;
-                case 7:
+                case 6:
                     //login
                     String USERNAME =getUsernameForLoginInput();
                     String PASSWORD =getPasswordForLoginInput();
@@ -116,16 +116,60 @@ public CustomerService customerService;
                         System.out.println("the account numbers are not found");
                     }
                     break;
-                case 8:
+                case 7:
                     break;
                 default:
                     System.out.println("Invalid entry,please try again");
 
             }
-        }   while(choice !=8);
+        }   while(choice !=7);
         System.out.println("Thank-you for using our service");
 }
-// ----LoginAccount
+
+    private double getInitailBalanceToCreate() {
+        System.out.println("Enter the initial Balance");
+        double input =sc.nextDouble();
+        return input;
+    }
+
+    private int getAccountNumToCreate() {
+        System.out.println("Assign account number for the new account");
+        int input =sc.nextInt();
+        return input;
+    }
+
+    private String getPasswordInputToCreate() {
+        System.out.println("Assign a password of the new account you created");
+        String input =sc.nextLine();
+        return input;
+    }
+
+    private String getUserNameInputToCreate() {
+        System.out.println("Assign a username for your account");
+        String input =sc.nextLine();
+        return input;
+    }
+
+    private String getLastnameInputToCreate() {
+        System.out.println("Enter your last name");
+        String input =sc.nextLine();
+        return input;
+    }
+
+    private String getFirstnameInputToCreateAccount() {
+        System.out.println("Enter your first name");
+        String input =sc.nextLine();
+        return input;
+    }
+
+    private int getCustomerIdInputToCreate() {
+        System.out.println("Enter a customer Id for the new account");
+        int input =sc.nextInt();
+        return input;
+    }
+
+
+    // ----LoginAccount
     private String getPasswordForLoginInput() {
         System.out.println("Enter your password to login to account");
         String input =sc.nextLine();
@@ -232,6 +276,11 @@ public CustomerService customerService;
         String firstname =sc.nextLine();
         return firstname;
         }
+    private int getCustomerIdInput() {
+        System.out.println("Enter the customer Id for the new customer");
+        int input =sc.nextInt();
+        return input;
+    }
         //
 }
 

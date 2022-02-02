@@ -2,6 +2,7 @@ package com.revature.doas;
 
 import com.revature.Util.ConnectionUtil;
 import com.revature.exceptions.UnfoundedAccountNumberException;
+import com.revature.model.BankAdmin;
 import com.revature.model.Customer;
 import com.revature.model.Employee;
 
@@ -13,21 +14,24 @@ public class EmployeeDAOImpl implements  EmployeeDAO{
 
     // Getting a customer by username
     @Override
-    public Employee getCustomerByUsername(String employee_Id, Connection con) throws SQLException {
-  Employee employee =null;
-  String sql = "SELECT *FROM employee WHERE employee_Id = ?";
+    public Customer getCustomerByCustomerId(int customer_Id, Connection con) throws SQLException {
+  String sql = "SELECT *FROM customer WHERE customer_Id = ?";
         PreparedStatement ps =con.prepareStatement(sql);
-        ps.setString(1,employee_Id);
-        ResultSet rs =ps.executeQuery();
-        if(rs.next()){
-            String firstname =rs.getString("firstname");
-            String lastname =rs.getString("lastname");
-            String employeeId =rs.getString("employee_Id");
-             employee =new Employee(firstname,lastname,employee_Id);
-        }
 
-        return employee;
+       Customer customer=null;
+//        String sql = "SELECT *FROM customer WHERE username = ?";
+//        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, customer_Id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            int customerId = rs.getInt("customer_Id");
+            int account_num = rs.getInt("account_num");
+            double balance= rs.getDouble("balance");
+           customer= new Customer(customer_Id, account_num, balance);
+        }
+        return null;
     }
+
 // Getting all customers
     @Override
     public List<Customer> getAllCustomers() throws SQLException {
@@ -40,7 +44,7 @@ public class EmployeeDAOImpl implements  EmployeeDAO{
                 Customer customer =new Customer();
              customer.setFirstname(rs.getString("firstname"));
              customer.setLastname(rs.getString("lastname"));
-             customer.getUsername(rs.getString("username"));
+             customer.getUsername();
              customer.setAccount_num(rs.getInt("account_num"));
              customer.setPassword(rs.getString("password"));
              customer.setBalance(rs.getDouble("balance"));
@@ -77,5 +81,100 @@ public class EmployeeDAOImpl implements  EmployeeDAO{
         }
         return true;
     }
+    @Override
+    public boolean deleteAccount(int account_num) throws SQLException {
+        boolean success =false;
+        try(Connection con =ConnectionUtil.getConnection()) {
+
+            String deleteSql ="DELETE FROM customer WHERE username= ?";
+            PreparedStatement deleteAccount = con.prepareStatement(deleteSql);
+            deleteAccount.setInt(1,account_num);
+            deleteAccount.executeUpdate();
+        }catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
     }
+
+    @Override
+    public void deposit(int account_num, double amount) throws SQLException {
+        try (Connection con = ConnectionUtil.getConnection()) {
+            String sql = ("UPDATE customer SET Balance = Balance + ? WHERE account_num =?");
+            Statement stmt = con.createStatement();
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setDouble(1, amount);
+            pstmt.setInt(2, account_num);
+            // Execute SQL statement
+            int result = pstmt.executeUpdate();
+            //process result
+            if (result > 0) {
+                System.out.println("You havae withdrawed  successfully :\nThe AccountNumber You withdrawed From:"
+                        + account_num + "\nAmount You Withdrawed:" + amount + "\n");
+            } else {
+                System.out.println("The Account_Number or password is wrong!");
+            }
+        } catch (Exception e) {
+            System.out.println("An error with JDBC " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void withdraw(int account_num, double amount) throws SQLException {
+        try (Connection con = ConnectionUtil.getConnection()) {
+            String sql = ("UPDATE customer SET Balance = Balance - ? WHERE account_num =?");
+            Statement stmt = con.createStatement();
+            PreparedStatement pstmt = con.prepareStatement(sql);
+//                pstmt.setString(1, account_num);
+//                pstmt.setDouble(2, amount);
+            // -trying another way
+            pstmt.setDouble(1, amount);
+            pstmt.setInt(2, account_num);
+            // Execute SQL statement
+            int result = pstmt.executeUpdate();
+            //process result
+            if (result > 0) {
+                System.out.println("You havae withdrawed  successfully :\nThe AccountNumber You withdrawed From:"
+                        + account_num + "\nAmount You Withdrawed:" + amount + "\n");
+            } else {
+                System.out.println("The Account_Number or password is wrong!");
+            }
+        } catch (Exception e) {
+            System.out.println("An error with JDBC " + e.getMessage());
+        }
+    }
+    @Override
+    public void transfer(int from, int to, double amount) throws Exception {
+
+        try (Connection con = ConnectionUtil.getConnection()) {
+            Statement st =con.createStatement();
+            // withdraw operation from source account
+            st.addBatch("UPDATE customer SET Balance = Balance -"+amount+ "WHERE Account_Number="+from);
+            //Deposit Operation to destination account
+            st.addBatch("UPDATE customer SET Balance =Balance + "+amount+ "WHERE Account_Number="+to);
+            //execute the batch in Array form
+            int res[]=st.executeBatch();
+            // performing transaction management
+            boolean flag =false;
+            // may be need to check the i<res.length/ it could be i<=res.length; as well
+            for(int i=0; i<res.length; ++i) {
+                System.out.println("res["+i+"] is " +res[i]);
+                if(res[i]==0) {
+                    flag =true;
+                    break; // break for the for-loop not condition
+                }
+                if(flag==true) {
+                    con.rollback();// if transaction is not completed
+                    System.out.println("Transaction is rollback,Amount is not transfred");
+                }
+                else
+                {
+                    con.commit();// if transaction is completed
+                    System.out.println("Transaction is committed,Amount is transferred successfully");
+                }
+                st.close();
+                con.close();
+            }
+        }
+    }
+}
 

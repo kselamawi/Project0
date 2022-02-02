@@ -9,30 +9,30 @@ import java.sql.*;
 
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
-    public boolean createAccount(String firstname, String lastname, String username, String password, int account_num, double balance) {
-
+    public boolean createAccount(int customer_Id, String firstname, String lastname, String username, String password, int account_num, double balance) {
         try (Connection con = ConnectionUtil.getConnection()) {
-//            if(findByName(firstname) !=null){
-//                System.out.println("Account "+firstname+ "already exists");
-//                return false;
-           // }
-
-            String sql = "INSERT INTO customer(firstname,lastname,username,password,account_num,balance) values (?,?,?,?,?,?)";
+            String sql = "INSERT INTO customer(customer_Id,firstname,lastname,username,password,account_num,balance) values (?,?,?,?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
-
-            ps.setString(1, firstname);
-            ps.setString(2, lastname);
-            ps.setString(3, username);
-            ps.setString(4, password);
-            ps.setInt(5,account_num);
-            ps.setDouble(6,balance);
+            ps.setInt(1,customer_Id);
+            ps.setString(2,firstname);
+            ps.setString(3,lastname);
+            ps.setString(4,username);
+            ps.setString(5,password);
+            ps.setInt(6,account_num);
+            ps.setDouble(7,balance);
+//            ps.setInt(1, customer_Id);
+//            ps.setString(2, firstname);
+//            ps.setString(3, lastname);
+//            ps.setString(4, username);
+//            ps.setString(4, password);
+//            ps.setInt(6,account_num);
+//            ps.setDouble(7,balance);
 
             int rowUpdated = ps.executeUpdate();
             if (rowUpdated == 1) {
                 System.out.println("Congratulation you have created an account:");
-                System.out.println("FirstName:  "  +firstname+ "   LastName:  "  +lastname+  "  UserName  :"  +username+ "  \nPassword :  " +password+  "account_num: "  +account_num+ " Balance:  "  +balance);
+                System.out.println("customer_Id:  "+customer_Id+ "FirstName:  "  +firstname+ "   LastName:  "  +lastname+  "  UserName  :"  +username+ "  \nPassword :  " +password+  "account_num: "  +account_num+ " Balance:  "  +balance);
                 return true;
-
             }
             throw new UserNotFoundException("an account wasn't created");
 //            return false;
@@ -43,57 +43,29 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public Customer getCustomerByUsername(String username) {
-        Customer customer = null;
+    public void deposit(int account_num, double amount) throws SQLException {
+
         try (Connection con = ConnectionUtil.getConnection()) {
-            String sql = "SELECT*FROM customer WHERE username=?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-
-//                String firstname = rs.getString("firstname");
-//                String lastname = rs.getString("lastname");
-//                String un = rs.getString("username");
-//                String password = rs.getString("password");
-//                double balance =rs.getDouble("balance");
-//                customer = new Customer(lastname,username,password,balance);
-                System.out.println("congratulation");
-                return new Customer(username);
+            String sql = ("UPDATE customer SET Balance = Balance + ? WHERE account_num =?");
+            Statement stmt = con.createStatement();
+            PreparedStatement pstmt = con.prepareStatement(sql);
+//                pstmt.setString(1, account_num);
+//                pstmt.setDouble(2, amount);
+            // -trying another way
+            pstmt.setDouble(1, amount);
+            pstmt.setInt(2, account_num);
+            // Execute SQL statement
+            int result = pstmt.executeUpdate();
+            //process result
+            if (result > 0) {
+                System.out.println("You have deposited  successfully :\nThe AccountNumber You deposited to:"
+                        + account_num + "\nAmount You deposited:" + amount + "\n");
+            } else {
+                System.out.println("The Account_Number or password is wrong!");
             }
-            throw new UserNotFoundException("the user name you entered" + username + "not found");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("An error with JDBC " + e.getMessage());
         }
-
-        return customer;
-    }
-
-    @Override
-    public void deposit(int account_num, double amount)  {
-        boolean success =false;
-      try(Connection con =ConnectionUtil.getConnection()){
-    String sql ="UPDATE customer SET balance = balance + ? where account_num =?";
-           // stmt.executeUpdate(sql);
-         Statement stmt = con.createStatement();
-       PreparedStatement ps = con.prepareStatement(sql);
-         //assign value to the placeholder
-          ps.setDouble(1,amount);
-          ps.setInt(2,account_num);
-           //Excute SQL statement
-          int result = ps.executeUpdate();
-             //process the result
-            if(result >0){
-                System.out.println("Congratulation you have successfully deposited to your account");
-            }else{
-                System.out.println("some thing went wrong");
-            }
-            throw  new UserNotFoundException("account wasn't created");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //return success;
-
     }
 
     @Override
@@ -108,7 +80,8 @@ public class CustomerDAOImpl implements CustomerDAO {
             ResultSet rs =ps.executeQuery();
             if(rs.next()){
 //                rs.getString("account_num");
-             int balance= rs.getInt(6);
+//             int balance= rs.getInt(6);
+                int balance =rs.getInt(7);
                 System.out.println("Balance of the account : " +account_num+ "  = $" +balance+ "\t");
             }
         }catch (UnfoundedAccountNumberException e){
@@ -167,7 +140,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 }
                 if(flag==true) {
                     con.rollback();// if transaction is not completed
-                    System.out.println("Transaction is rollback,Amount is not transefered");
+                    System.out.println("Transaction is rollback,Amount is not transfred");
                 }
                 else
                 {
@@ -200,7 +173,12 @@ public class CustomerDAOImpl implements CustomerDAO {
         return false;
     }
 
+    @Override
+    public Customer getCustomerByUsername(String username) {
+        return null;
     }
+
+}
 
 
 

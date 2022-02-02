@@ -1,21 +1,23 @@
 package com.revature.model;
 
-import java.util.Objects;
+import java.util.List;
 
 public class Customer {
+    private int customer_Id;
     private String firstname;
     private String lastname;
     private String username;
     private String password;
     private int account_num;
     private double balance;
-//    private List<Customer> customerList;
+   private List<Customer> customers;
     private Customer customer;
 
     public Customer() {
     }
 
-    public Customer(String firstname, String lastname, String username, String password, int account_num, double balance, Customer customer) {
+    public Customer(int customer_Id, String firstname, String lastname, String username, String password, int account_num, double balance, Customer customer) {
+        this.customer_Id = customer_Id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
@@ -25,54 +27,63 @@ public class Customer {
         this.customer = customer;
     }
 
-    public Customer( String username){
+    public Customer(String username) {
+
     }
 
-    public Customer(Comparable<String> lastname, Comparable<String> username, Comparable<String> stringComparable, double balance) {
+    public Customer(int customer_id, int account_num, double balance) {
     }
 
-    public String getFirstname(String firstname) {
-        return this.firstname;
+    public int getCustomer_Id(int customer_Id) {
+        return this.customer_Id;
+    }
+
+    public void setCustomer_Id(int customer_Id) {
+        this.customer_Id = customer_Id;
+    }
+
+    public String getFirstname() {
+        return firstname;
     }
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
-    public String getLastname(String lastname) {
-        return this.lastname;
+    public String getLastname() {
+        return lastname;
     }
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
 
-    public String getUsername(String username) {
-        return this.username;
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getPassword(String password) {
-        return this.password;
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public int getAccount_num(int account_num) {
-        return this.account_num;
+    public int getAccount_num() {
+        return account_num;
     }
 
     public void setAccount_num(int account_num) {
         this.account_num = account_num;
     }
 
-    public double getBalance(String balance) {
-        return this.balance;
+    public double getBalance() {
+        return balance;
     }
 
     public void setBalance(double balance) {
@@ -95,21 +106,14 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "firstname='" + firstname + '\'' +
+                "customer_Id=" + customer_Id +
+                ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", account_num='" + account_num + '\'' +
+                ", account_num=" + account_num +
                 ", balance=" + balance +
                 ", customer=" + customer +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer1 = (Customer) o;
-        return Double.compare(customer1.balance, balance) == 0 && Objects.equals(firstname, customer1.firstname) && Objects.equals(lastname, customer1.lastname) && Objects.equals(username, customer1.username) && Objects.equals(password, customer1.password) && Objects.equals(account_num, customer1.account_num) && Objects.equals(customer, customer1.customer);
     }
 }

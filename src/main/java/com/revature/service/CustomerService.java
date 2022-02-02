@@ -14,9 +14,9 @@ public class CustomerService {
     Scanner sc = new Scanner(System.in);
     public CustomerDAO customerDAO = new CustomerDAOImpl();
 
-    public boolean createAccount(String firstname, String lastname, String username, String password, int account_num, double balance) throws Exception {
+    public boolean createAccount(int customer_Id,String firstname, String lastname, String username, String password, int account_num, double balance) throws Exception {
         try (Connection con = ConnectionUtil.getConnection()) {
-            customerDAO.createAccount(firstname, lastname, username, password, account_num, balance);
+            customerDAO.createAccount(customer_Id,firstname, lastname, username, password, account_num, balance);
         }
         return false;
     }

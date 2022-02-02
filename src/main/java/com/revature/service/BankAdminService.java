@@ -3,11 +3,8 @@ package com.revature.service;
 import com.revature.Util.ConnectionUtil;
 import com.revature.doas.BankAdminDAO;
 import com.revature.doas.BankAminDAOImpl;
-import com.revature.doas.CustomerDAO;
-import com.revature.doas.CustomerDAOImpl;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.model.BankAdmin;
-import com.revature.model.Customer;
 import com.revature.model.Employee;
 
 import java.sql.Connection;
@@ -33,8 +30,7 @@ public class BankAdminService {
 
     }
 
-
-    public boolean deposit(String account_num, double amount) throws SQLException, Exception {
+    public boolean deposit(int account_num, double amount) throws SQLException, Exception {
         try (Connection con = ConnectionUtil.getConnection()) {
             if (amount <= 0) {
                 return false;
@@ -44,6 +40,23 @@ public class BankAdminService {
             }
 
         }
+    }
+    // withdraw
+    public boolean withdraw(int account_num, double amount) throws Exception {
+        // if(amount <=0 || amount > balance){
+        if (amount <= 0) {
+
+            return false;
+        } else {
+            bankAdminDAO.withdraw(account_num, amount);
+        }
+        return true;
+    }
+
+    // transfer funds
+    public void transfer(int from, int to, double amount) throws Exception {
+        bankAdminDAO.withdraw(from, amount);
+        bankAdminDAO.deposit(to, amount);
     }
 }
 

@@ -12,5 +12,9 @@ public interface BankAdminDAO {
 
    public  List<Employee> getAllEmployee() throws SQLException;
 
-   public  boolean deposit(String account_num, double amount);
+   public  boolean deposit(int account_num, double amount) throws Exception;
+
+   public boolean withdraw(int account_num, double amount) throws Exception;
+
+    public void transfer(int from, int to, double amount) throws Exception;
 }

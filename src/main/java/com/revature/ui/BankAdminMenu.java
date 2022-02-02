@@ -1,7 +1,6 @@
 package com.revature.ui;
 
 import com.revature.model.BankAdmin;
-import com.revature.model.Customer;
 import com.revature.model.Employee;
 import com.revature.service.BankAdminService;
 
@@ -19,12 +18,12 @@ public class BankAdminMenu implements Menu {
         int choice = 0;
         do {
             System.out.println("=======BANKADMIN MENU====");
-            System.out.println("1.) get All Employee ");
+            System.out.println("1.) get all employees ");
             System.out.println("2.) get Customer information");
             System.out.println("3.) Cancel Account ");
             System.out.println("4.) Withdraw from an account");
             System.out.println("5.) Deposit to an Account ");
-            System.out.println("6.) Transfer from an Account ");
+            System.out.println("6.) Transfer fund ");
             System.out.println("7.) Back");
             try {
                 choice = Integer.parseInt(Menu.sc.nextLine());
@@ -56,9 +55,18 @@ public class BankAdminMenu implements Menu {
                     break;
                 case 4:
                     //withdraw from an account
+                    int acct_num =getAccountNumInputForWithdraw();
+                    double amnt =getAmountInputForWithdraw();
+                    try{
+                        bankAdminService.withdraw(acct_num,amnt);
+                        
+                    }catch (Exception e){
+                        System.out.println(e.getClass() + " "+e.getMessage());
+                    }
+                    
                 case 5:
                     // Deposit to an account
-                    String account_num =getAccountNumberInput();
+                    int account_num =getAccountNumberInput();
                     double amount = getAmountInput();
 
                     try {
@@ -70,6 +78,14 @@ public class BankAdminMenu implements Menu {
                     break;
                 case 6:
                     //Transfer from an account
+                    int scr =getSourceAccountNumInput();
+                    int des =getDestinationAccountNumInput();
+                    double amt =getAmountForTransferFund();
+                    try{
+                        bankAdminService.transfer(scr,des,amt);
+                    }catch (Exception e){
+                        System.out.println(e.getClass()+ ""+e.getMessage());
+                    }
                     break;
                 case 7:
                     break;
@@ -79,16 +95,47 @@ public class BankAdminMenu implements Menu {
         }while (choice != 7) ;
 
     }
-// deposit
+
+    private double getAmountForTransferFund() {
+        System.out.println("enter the amount you would like to transfer to another account");
+        double input =sc.nextDouble();
+        return input;
+    }
+
+    private int getDestinationAccountNumInput() {
+        System.out.println("enter the your destination account number where you're depositing the money");
+        int input =sc.nextInt();
+        return input;
+    }
+
+    private int getSourceAccountNumInput() {
+        System.out.println("Enter your source account account number where you're withdrawing from");
+        int input =sc.nextInt();
+        return input;
+    }
+//withdraw
+    private double getAmountInputForWithdraw() {
+        System.out.println("Enter the amount you would like to withdraw");
+        double input =sc.nextDouble();
+        return input;
+    }
+
+    private int getAccountNumInputForWithdraw() {
+        System.out.println("Enter the account number you are withdrawing from");
+        int input =sc.nextInt();
+        return input;
+    }
+
+    // deposit
     private double getAmountInput() {
         System.out.println("Enter the amount you would like to deposit");
         double input =sc.nextDouble();
         return input;
     }
 
-    private String getAccountNumberInput() {
-        System.out.println("Enter the account you would like to deposit ");
-        String input =sc.nextLine();
+    private int getAccountNumberInput() {
+        System.out.println("Enter the account number you would like to deposit ");
+        int input =sc.nextInt();
         return input;
 
     }
