@@ -5,7 +5,7 @@ import com.revature.model.Customer;
 import java.sql.SQLException;
 
 public interface CustomerDAO {
-    public boolean createAccount(int customer_Id,String firstname, String lastname, String username, String password, int account_num, double balance);
+    public boolean createAccount(int customer_Id, String firstname, String lastname, String username, String password, int account_num, double balance);
 
    public void deposit(int account_num, double amount) throws SQLException;
 

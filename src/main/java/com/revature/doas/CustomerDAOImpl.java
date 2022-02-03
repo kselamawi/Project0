@@ -9,7 +9,8 @@ import java.sql.*;
 
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
-    public boolean createAccount(int customer_Id, String firstname, String lastname, String username, String password, int account_num, double balance) {
+    public boolean createAccount(int customer_Id,String firstname,String lastname,String username,String password,int account_num,double balance){
+        //int customer_Id, String firstname, String lastname, String username, String password, int account_num, double balance
         try (Connection con = ConnectionUtil.getConnection()) {
             String sql = "INSERT INTO customer(customer_Id,firstname,lastname,username,password,account_num,balance) values (?,?,?,?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
@@ -20,14 +21,6 @@ public class CustomerDAOImpl implements CustomerDAO {
             ps.setString(5,password);
             ps.setInt(6,account_num);
             ps.setDouble(7,balance);
-//            ps.setInt(1, customer_Id);
-//            ps.setString(2, firstname);
-//            ps.setString(3, lastname);
-//            ps.setString(4, username);
-//            ps.setString(4, password);
-//            ps.setInt(6,account_num);
-//            ps.setDouble(7,balance);
-
             int rowUpdated = ps.executeUpdate();
             if (rowUpdated == 1) {
                 System.out.println("Congratulation you have created an account:");
@@ -49,9 +42,6 @@ public class CustomerDAOImpl implements CustomerDAO {
             String sql = ("UPDATE customer SET Balance = Balance + ? WHERE account_num =?");
             Statement stmt = con.createStatement();
             PreparedStatement pstmt = con.prepareStatement(sql);
-//                pstmt.setString(1, account_num);
-//                pstmt.setDouble(2, amount);
-            // -trying another way
             pstmt.setDouble(1, amount);
             pstmt.setInt(2, account_num);
             // Execute SQL statement
@@ -79,8 +69,6 @@ public class CustomerDAOImpl implements CustomerDAO {
             ps.setInt(1,(account_num));
             ResultSet rs =ps.executeQuery();
             if(rs.next()){
-//                rs.getString("account_num");
-//             int balance= rs.getInt(6);
                 int balance =rs.getInt(7);
                 System.out.println("Balance of the account : " +account_num+ "  = $" +balance+ "\t");
             }
@@ -127,16 +115,15 @@ public class CustomerDAOImpl implements CustomerDAO {
             st.addBatch("UPDATE customer SET Balance = Balance -"+amount+ "WHERE Account_Number="+from);
             //Deposit Operation to destination account
             st.addBatch("UPDATE customer SET Balance =Balance + "+amount+ "WHERE Account_Number="+to);
-            //execute the batch in Array form
+            //the executeBatch() will start the execution of both statements then returns an array form
             int res[]=st.executeBatch();
             // performing transaction management
             boolean flag =false;
-            // may be need to check the i<res.length/ it could be i<=res.length; as well
             for(int i=0; i<res.length; ++i) {
                 System.out.println("res["+i+"] is " +res[i]);
                 if(res[i]==0) {
                     flag =true;
-                    break; // break for the for-loop not condition
+                    break;
                 }
                 if(flag==true) {
                     con.rollback();// if transaction is not completed

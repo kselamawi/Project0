@@ -31,7 +31,6 @@ public class CustomerService {
             return customer;
         }
     }
-
     // Deposit
     public boolean deposit(int account_num, double amount) throws SQLException, Exception {
         try (Connection con = ConnectionUtil.getConnection()) {

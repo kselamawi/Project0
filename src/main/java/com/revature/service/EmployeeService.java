@@ -5,7 +5,6 @@ import com.revature.doas.EmployeeDAO;
 import com.revature.doas.EmployeeDAOImpl;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.model.Customer;
-import com.revature.model.Employee;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,7 +19,7 @@ public EmployeeDAO employeeDAO;
     }
     // ----list of employee
     public Customer getCustomerByCustomerId(int customer_Id) throws Exception {
-       Customer customer=new Customer();
+       Customer customer=new Customer("solomon", "kahsai", "solomeda", "password", 11122333, 5678, new Customer());
         Connection con = ConnectionUtil.getConnection();
          employeeDAO.getCustomerByCustomerId(customer_Id, con);
         if (customer_Id == 0) {

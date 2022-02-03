@@ -11,7 +11,7 @@ public class MainMenu  implements Menu {
             System.out.println("========MAIN MENU====");
             System.out.println("+------------------------------------------------------+");
             System.out.println("|        Welcome to Mr.S's                             |");
-            System.out.println("|        Excellent Bank App                            |");
+            System.out.println("|        Online Banking                                 |");
             System.out.println("+------------------------------------------------------+");
             System.out.println("Please select an option below");
             System.out.println("1.) CustomerMenu");

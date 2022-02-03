@@ -15,6 +15,18 @@ public class Log4jDemo {
             log.warn("this is a warning message");
             log.fatal("this is a fatal message");
             System.out.println("\n completed.....");
+        System.out.println("\n Hello world....... \n");
+        log.info("this is an information message");
+        log.error("this is an error message");
+        log.warn("this is a warning message");
+        log.fatal("this is a fatal message");
+        System.out.println("\n completed.....");
+        System.out.println("\n Hello world....... \n");
+        log.info("this is an information message");
+        log.error("this is an error message");
+        log.warn("this is a warning message");
+        log.fatal("this is a fatal message");
+        System.out.println("\n completed.....");
 
     }
     }

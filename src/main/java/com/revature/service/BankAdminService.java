@@ -65,15 +65,6 @@ public class BankAdminService {
 
 
 
-//    public  void closeAccount(String username) throws SQLException{
-//        try (Connection con = ConnectionUtil.getConnection()) {
-//
-//
-//        }
-//
-//    }
-
-
 
 
 

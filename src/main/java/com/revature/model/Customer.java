@@ -13,10 +13,10 @@ public class Customer {
    private List<Customer> customers;
     private Customer customer;
 
-    public Customer() {
+    public Customer(String solomon, String kahsai, String solomeda, String password, int i, int i1, Customer customer) {
     }
 
-    public Customer(int customer_Id, String firstname, String lastname, String username, String password, int account_num, double balance, Customer customer) {
+    public Customer() {
         this.customer_Id = customer_Id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -66,8 +66,8 @@ public class Customer {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPassword(String password) {
+        return this.password;
     }
 
     public void setPassword(String password) {
